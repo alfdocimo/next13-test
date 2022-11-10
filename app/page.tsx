@@ -1,7 +1,30 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Image from "next/image";
+import styles from "./page.module.css";
+import { signIn } from "next-auth/react";
 
-export default function Home() {
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
+import SignIn from "./SignIn";
+import SignOut from "./SignOut";
+
+// const getSession = async () => {
+//   const session = await fetch("http://localhost:3000/api/getUser");
+//   return session;
+// };
+
+export default async function Home() {
+  const session = await unstable_getServerSession(authOptions);
+  // // let session = await getSession();
+  // console.log({ session });
+  // if (session?.user) {
+  //   return (
+  //     <div>
+  //       <pre>{JSON.stringify(session, null, 2)}</pre>
+  //       <SignOut />
+  //     </div>
+  //   );
+  // }
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -9,8 +32,13 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js 13!</a>
         </h1>
 
+        <SignIn />
+        <div>
+          <pre>{JSON.stringify(session, null, 2)}</pre>
+          <SignOut />
+        </div>
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>app/page.tsx</code>
         </p>
 
@@ -46,12 +74,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
